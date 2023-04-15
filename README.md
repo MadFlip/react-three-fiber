@@ -1,4 +1,4 @@
-# Three.js Journey
+# My first React App with react-three-fiber (React renderer for three.js)
 
 ## Setup
 Download [Node.js](https://nodejs.org/en/download/).
