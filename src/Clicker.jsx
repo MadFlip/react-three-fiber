@@ -1,20 +1,21 @@
 import { useState, useEffect } from 'react'
 
-export default function Clicker() {
-  const [count, setCount] = useState(localStorage.getItem('count') * 1 ?? 0)
+// Clicker(props) === Clicker({ keyName }) - destructuring
+
+export default function Clicker({ keyName }) {
+  const [count, setCount] = useState(localStorage.getItem(keyName) * 1 ?? 0)
 
   // if you want to run useEffect only once, pass an empty array as the second argument
+  // return a function from useEffect to run when the component unmounts
   useEffect(() => {
-    console.log('component mounted')
-
     return () => {
-      console.log('component unmounted')
+      localStorage.removeItem(keyName)
     }
   }, [])
 
   // if you want to run useEffect only when count changes, pass count as the second argument
   useEffect(() => {
-    localStorage.setItem('count', count)
+    localStorage.setItem(keyName, count)
   }, [count])
 
   const buttonClick = () => {
@@ -29,7 +30,7 @@ export default function Clicker() {
     <div className="clicker">
       <div className="clicks">Clicks: { count }</div>
       <button className="button" onClick={ buttonClick }>Click Me</button><br /><br />
-      <button className="button" onClick={ resetClicks }>Reset Counter</button>
+      {/* <button className="button" onClick={ resetClicks }>Reset Counter</button> */}
     </div>
   )
 }
