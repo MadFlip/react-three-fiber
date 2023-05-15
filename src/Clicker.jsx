@@ -1,12 +1,17 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 // Clicker(props) === Clicker({ keyName }) - destructuring
 
 export default function Clicker({increment, keyName, color }) {
   const [count, setCount] = useState(localStorage.getItem(keyName) * 1 ?? 0)
+  const buttonRef = useRef()
+
   // if you want to run useEffect only once, pass an empty array as the second argument
   // return a function from useEffect to run when the component unmounts
   useEffect(() => {
+    // use a ref to access the button element inside useEffect
+    console.log(buttonRef.current)
+
     return () => {
       localStorage.removeItem(keyName)
     }
@@ -29,7 +34,7 @@ export default function Clicker({increment, keyName, color }) {
   return (
     <div className="clicker">
       <div className="clicks">Clicks: { count }</div>
-      <button className="button" onClick={ buttonClick } style={ {backgroundColor: color} }>Click Me</button><br /><br />
+      <button ref={ buttonRef } className="button" onClick={ buttonClick } style={ {backgroundColor: color} }>Click Me</button><br /><br />
       {/* <button className="button" onClick={ resetClicks }>Reset Counter</button> */}
     </div>
   )
