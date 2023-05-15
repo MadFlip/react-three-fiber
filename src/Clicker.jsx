@@ -10,7 +10,7 @@ export default function Clicker({increment, keyName, color }) {
   // return a function from useEffect to run when the component unmounts
   useEffect(() => {
     // use a ref to access the button element inside useEffect
-    console.log(buttonRef.current)
+    // console.log(buttonRef.current)
 
     return () => {
       localStorage.removeItem(keyName)

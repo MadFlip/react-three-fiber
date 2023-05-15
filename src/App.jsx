@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import Clicker from './Clicker'
+import People from './People'
 
 export default function App({ clickersCount = 1 }) {
   const [ hasClicker, setHasClicker ] = useState(true)
@@ -30,6 +31,7 @@ export default function App({ clickersCount = 1 }) {
           return <Clicker increment={ incrementCount } key={ index } keyName={`count${index}`} color={colors[index]} />
         }) }
       </> }
+      <People /> 
     </>
   )
 }

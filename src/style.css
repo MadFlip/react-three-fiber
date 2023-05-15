@@ -37,3 +37,9 @@ body {
 .clicks {
   margin-bottom: 10px;
 }
+
+.peopleList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
