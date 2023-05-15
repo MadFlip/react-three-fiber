@@ -1,9 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 export default function Clicker() {
-  const countState = useState(0)
-  const count = countState[0]
-  const setCount = countState[1]
+  const [count, setCount] = useState(0)
+
+  // if you want to run useEffect only once, pass an empty array as the second argument
+  useEffect(() => {
+    console.log('useEffect called') 
+  }, [])
 
   const buttonClick = () => {
     setCount(count => count + 1)
