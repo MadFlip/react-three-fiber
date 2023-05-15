@@ -1,12 +1,21 @@
 import { useState, useEffect } from 'react'
 
 export default function Clicker() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(localStorage.getItem('count') * 1 ?? 0)
 
   // if you want to run useEffect only once, pass an empty array as the second argument
   useEffect(() => {
-    console.log('useEffect called') 
+    console.log('component mounted')
+
+    return () => {
+      console.log('component unmounted')
+    }
   }, [])
+
+  // if you want to run useEffect only when count changes, pass count as the second argument
+  useEffect(() => {
+    localStorage.setItem('count', count)
+  }, [count])
 
   const buttonClick = () => {
     setCount(count => count + 1)
