@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 // Clicker(props) === Clicker({ keyName }) - destructuring
 
-export default function Clicker({ keyName, color }) {
+export default function Clicker({increment, keyName, color }) {
   const [count, setCount] = useState(localStorage.getItem(keyName) * 1 ?? 0)
   // if you want to run useEffect only once, pass an empty array as the second argument
   // return a function from useEffect to run when the component unmounts
@@ -19,6 +19,7 @@ export default function Clicker({ keyName, color }) {
 
   const buttonClick = () => {
     setCount(count => count + 1)
+    increment()
   }
 
   const resetClicks = () => {
