@@ -1,9 +1,12 @@
 import './style.css'
-import { createRoot } from 'react-dom/client'
-import App from './App'
+import ReactDOM from 'react-dom/client'
+import { Canvas } from '@react-three/fiber'
+import Experience from './Experience.jsx'
 
-const root = createRoot(document.querySelector('#root'))
+const root = ReactDOM.createRoot(document.querySelector('#root'))
 
 root.render(
-  <App clickersCount={ 3 } />
+  <Canvas>
+    <Experience />
+  </Canvas>
 )
