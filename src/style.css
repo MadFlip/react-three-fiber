@@ -8,3 +8,13 @@ body,
   margin: 0;
   background: lightskyblue;
 }
+
+.label > div {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 24px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  user-select: none;
+}
