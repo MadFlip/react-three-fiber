@@ -12,10 +12,15 @@ export default function Experience() {
 
   useFrame((state, delta) => {
     groupRef.current.rotation.y += delta * 2
+    // const angle = state.clock.getElapsedTime()
+    // state.camera.position.x = Math.sin(angle) * 4
+    // state.camera.position.z = Math.cos(angle) * 4
+    // state.camera.lookAt(0, 0, 0)
   })
 
   return <>
     <orbitControls args={[ camera, gl.domElement ]} />
+
     <directionalLight position={[ 1, 2, 3 ]} intensity={ 1.5 } />
     <ambientLight intensity={ 0.5 } />
 
