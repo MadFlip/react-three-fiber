@@ -1,6 +1,8 @@
-import { OrbitControls } from '@react-three/drei'
+import { BakeShadows, OrbitControls, useHelper } from '@react-three/drei'
 import { useControls, button } from 'leva'
 import { Perf } from 'r3f-perf'
+import { useRef } from 'react'
+import * as THREE from 'three'
 
 export default function Experience()
 {
@@ -35,25 +37,40 @@ export default function Experience()
       }
     })
 
-    return <>
-        { perfVisible && <Perf openByDefault trackGPU={ true } position="bottom-right" /> }
+    const directionalLight = useRef()
+    useHelper(directionalLight, THREE.DirectionalLightHelper, 1)
 
+    return <>
+        <BakeShadows />
+        <color args={[ 'ivory' ]} attach="background" />
+
+        { perfVisible && <Perf openByDefault trackGPU={ true } position="bottom-right" /> }
         <OrbitControls makeDefault />
 
-        <directionalLight position={[ 1, 2, 3 ]} intensity={ 1.5 } />
+        <directionalLight ref={ directionalLight } 
+          castShadow 
+          shadow-mapSize={ [1024, 1024] }
+          shadow-camera-top={ 3 }
+          shadow-camera-right={ 3 }
+          shadow-camera-bottom={ -3 }
+          shadow-camera-left={ -3 }
+          shadow-camera-near={ 0.1 }
+          shadow-camera-far={ 10 }
+          position={[ 1, 2, 3 ]} 
+          intensity={ 1.5 } />
         <ambientLight intensity={ 0.5 } />
 
-        <mesh position={[ position.x, position.y, 0 ]} scale={ choice }  visible={ visible }>
+        <mesh castShadow position={[ position.x, position.y, 0 ]} scale={ choice }  visible={ visible }>
             <sphereGeometry />
             <meshStandardMaterial color={ color } />
         </mesh>
 
-        <mesh position-x={ 2 } scale={ scale }>
+        <mesh castShadow position-x={ 2 } scale={ scale }>
             <boxGeometry />
             <meshStandardMaterial color="mediumpurple" />
         </mesh>
 
-        <mesh position-y={ -1 } rotation-x={ -Math.PI * 0.5 } scale={ 10 }>
+        <mesh position-y={ -1 } receiveShadow rotation-x={ -Math.PI * 0.5 } scale={ 10 }>
             <planeGeometry />
             <meshStandardMaterial color="greenyellow" />
         </mesh>

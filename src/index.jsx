@@ -6,17 +6,22 @@ import { StrictMode } from 'react'
 import { Leva } from 'leva'
 
 const root = ReactDOM.createRoot(document.querySelector('#root'))
+// const created = ({ gl, scene }) => {
+//   gl.setClearColor('red')
+//   scene.background = new THREE.Color('blue')
+// }
 
 root.render(
   <StrictMode>
-    <Leva collapsed />
     <Canvas
+      shadows
       camera={{
           fov: 45,
           near: 0.1,
           far: 200,
           position: [-4, 3, 6]
       }}
+      // onCreated={ created }
     >
       <Experience />
     </Canvas>
