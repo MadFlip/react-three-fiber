@@ -1,4 +1,4 @@
-import { AccumulativeShadows, OrbitControls, RandomizedLight, useHelper } from '@react-three/drei'
+import { ContactShadows, OrbitControls, useHelper } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useControls, button } from 'leva'
 import { Perf } from 'r3f-perf'
@@ -13,9 +13,9 @@ export default function Experience()
 
     const { position, color, visible, choice } = useControls('Sphere',{
       position: {
-        value: { x: -2, y: 0},
+        value: { x: -2, y: 0.2},
         x: { min: -5, max: 5, step: 0.1 },
-        y: { min: 0, max: 5, step: 0.1 },
+        y: { min: 0.2, max: 5, step: 0.1 },
         joystick: 'invertY'
       },
       color: 'tomato',
@@ -38,12 +38,34 @@ export default function Experience()
       }
     })
 
+    const { shadowColor, shadowOpacity, shadowBlur, shadowPosition } = useControls('ControlShadows',{
+      shadowOpacity: {
+        value: 0.5,
+        min: 0,
+        max: 1,
+        step: 0.1,
+      },
+      shadowColor: '#211614',
+      shadowBlur: {
+        value: 1,
+        min: 0,
+        max: 10,
+        step: 0.1,
+      },
+      shadowPosition: {
+        value: { x: 0, y: 0},
+        x: { min: -5, max: 5, step: 0.1 },
+        y: { min: -5, max: 5, step: 0.1 },
+        joystick: 'invertY'
+      },
+    })
+
+    const directionalLight = useRef()
     const cube = useRef()
-    // useHelper(directionalLight, THREE.DirectionalLightHelper, 1)
+    useHelper(directionalLight, THREE.DirectionalLightHelper, 1)
+
     useFrame((state, delta) => {
-      const time = state.clock.elapsedTime
       cube.current.rotation.y += delta * 0.2
-      // cube.current.position.x = Math.sin(time) + 2
     })
 
     return <>
@@ -59,26 +81,19 @@ export default function Experience()
 
         { perfVisible && <Perf openByDefault trackGPU={ true } position="bottom-right" /> }
         <OrbitControls makeDefault />
+
+        <ContactShadows
+          position={[ shadowPosition.x, -0.99, shadowPosition.y ]}
+          scale={ 10 }
+          resolution={ 512 }
+          far={ 5 }
+          color = { shadowColor }
+          opacity = { shadowOpacity }
+          blur = { position.y }
+          frames={ 1 }
+        />
         
-        <AccumulativeShadows 
-          position={[ 0, -0.99, 0 ]}
-          scale={ 10 } 
-          color="#316d39"
-          opacity={ 0.8 } 
-          frames={ Infinity }
-          temporal
-          blend={ 100 }
-            >
-            <RandomizedLight
-              amount={ 8 }
-              radius={ 1 }
-              ambient={ 0.5 }
-              intensity={ 1 }
-              position={[ 1, 2, 3 ]}
-              bias={ 0.001 }
-            />
-        </AccumulativeShadows>
-        <directionalLight
+        <directionalLight ref={ directionalLight }
           castShadow 
           shadow-mapSize={ [1024, 1024] }
           shadow-camera-top={ 3 }
@@ -96,7 +111,7 @@ export default function Experience()
             <meshStandardMaterial color={ color } />
         </mesh>
 
-        <mesh ref={ cube }  castShadow position-x={ 2 } scale={ scale }>
+        <mesh ref={ cube } castShadow position-x={ 2 } scale={ scale }>
             <boxGeometry />
             <meshStandardMaterial color="mediumpurple" />
         </mesh>
