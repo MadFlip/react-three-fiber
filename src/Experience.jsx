@@ -1,4 +1,4 @@
-import { BakeShadows, OrbitControls, useHelper } from '@react-three/drei'
+import { SoftShadows, BakeShadows, OrbitControls, useHelper } from '@react-three/drei'
 import { useControls, button } from 'leva'
 import { Perf } from 'r3f-perf'
 import { useRef } from 'react'
@@ -42,6 +42,12 @@ export default function Experience()
 
     return <>
         <BakeShadows />
+        <SoftShadows frustum={ 3.75 }
+          size={ 50 }
+          near={ 9.5 }
+          samples={ 17 }
+          rings={ 11 }
+        />
         <color args={[ 'ivory' ]} attach="background" />
 
         { perfVisible && <Perf openByDefault trackGPU={ true } position="bottom-right" /> }
