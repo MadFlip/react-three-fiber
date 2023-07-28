@@ -1,4 +1,4 @@
-import { ContactShadows, Environment, OrbitControls, useHelper } from '@react-three/drei'
+import { Lightformer, Environment, OrbitControls, useHelper } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useControls, button } from 'leva'
 import { Perf } from 'r3f-perf'
@@ -18,7 +18,7 @@ export default function Experience()
         y: { min: 0.2, max: 5, step: 0.1 },
         joystick: 'invertY'
       },
-      color: 'tomato',
+      color: 'white',
       visible: true,
       myInterval: {
         min: 0,
@@ -62,7 +62,7 @@ export default function Experience()
 
     const { envMapIntensity } = useControls('Environment', {
       envMapIntensity: {
-        value: 3.5,
+        value: 1,
         min: 0,
         max: 10,
         step: 0.1,
@@ -83,18 +83,32 @@ export default function Experience()
           samples={ 17 }
           rings={ 11 }
         /> */}
-        <Environment
-        background={ true}
-        // files={ './environmentMaps/the_sky_is_on_fire_2k.hdr' }
-        preset='sunset'
-        />
+        <Environment 
+          background
+          preset='sunset'
+          resolution={ 32 }
+        >
+          <color args={ ['blue'] } attach="background" />
+          <Lightformer position={ -5 }
+            scale={ 5 }
+            color={ 'red' }
+            intensity={ 10 }
+            form="ring"
+          ></Lightformer>
+          {/* <mesh position-z={ -5 } scale={ 10 }> 
+            <planeGeometry/>
+            <meshBasicMaterial color={ [ 10, 0, 0 ] }/>
+          </mesh> */}
+        </Environment>
+
+        
         
         <color args={[ 'ivory' ]} attach="background" />
 
         { perfVisible && <Perf openByDefault trackGPU={ true } position="bottom-right" /> }
         <OrbitControls makeDefault />
 
-        <ContactShadows
+        {/* <ContactShadows
           position={[ shadowPosition.x, -0.99, shadowPosition.y ]}
           scale={ 10 }
           resolution={ 512 }
@@ -103,7 +117,7 @@ export default function Experience()
           opacity = { shadowOpacity }
           blur = { position.y }
           frames={ 1 }
-        />
+        /> */}
     
 
         <mesh castShadow position={[ position.x, position.y, 0 ]} scale={ choice }  visible={ visible }>
@@ -113,7 +127,7 @@ export default function Experience()
 
         <mesh ref={ cube } castShadow position-x={ 2 } scale={ scale }>
             <boxGeometry />
-            <meshStandardMaterial color="mediumpurple"  envMapIntensity={ envMapIntensity }/>
+            <meshStandardMaterial color="white"  envMapIntensity={ envMapIntensity }/>
         </mesh>
 
         <mesh position-y={ -1 } rotation-x={ -Math.PI * 0.5 } scale={ 10 }>
