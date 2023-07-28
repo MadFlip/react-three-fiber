@@ -85,17 +85,9 @@ export default function Experience()
         /> */}
         <Environment
         background={ true}
-        files={
-          [
-            './environmentMaps/0/px.jpg',
-            './environmentMaps/0/nx.jpg',
-            './environmentMaps/0/py.jpg',
-            './environmentMaps/0/ny.jpg',
-            './environmentMaps/0/pz.jpg',
-            './environmentMaps/0/nz.jpg',
-
-          ]
-        } />
+        // files={ './environmentMaps/the_sky_is_on_fire_2k.hdr' }
+        preset='sunset'
+        />
         
         <color args={[ 'ivory' ]} attach="background" />
 
