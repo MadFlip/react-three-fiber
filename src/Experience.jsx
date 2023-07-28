@@ -1,4 +1,4 @@
-import { ContactShadows, OrbitControls, Sky, useHelper } from '@react-three/drei'
+import { ContactShadows, Environment, OrbitControls, useHelper } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useControls, button } from 'leva'
 import { Perf } from 'r3f-perf'
@@ -60,15 +60,16 @@ export default function Experience()
       },
     })
 
-    const { sunPosition } = useControls('Sky', {
-      sunPosition: {
-        value: [ 1, 2, 3]
+    const { envMapIntensity } = useControls('Environment', {
+      envMapIntensity: {
+        value: 3.5,
+        min: 0,
+        max: 10,
+        step: 0.1,
       },
     })
 
-    const directionalLight = useRef()
     const cube = useRef()
-    useHelper(directionalLight, THREE.DirectionalLightHelper, 1)
 
     useFrame((state, delta) => {
       cube.current.rotation.y += delta * 0.2
@@ -82,6 +83,19 @@ export default function Experience()
           samples={ 17 }
           rings={ 11 }
         /> */}
+        <Environment
+        background={ true}
+        files={
+          [
+            './environmentMaps/0/px.jpg',
+            './environmentMaps/0/nx.jpg',
+            './environmentMaps/0/py.jpg',
+            './environmentMaps/0/ny.jpg',
+            './environmentMaps/0/pz.jpg',
+            './environmentMaps/0/nz.jpg',
+
+          ]
+        } />
         
         <color args={[ 'ivory' ]} attach="background" />
 
@@ -98,34 +112,21 @@ export default function Experience()
           blur = { position.y }
           frames={ 1 }
         />
-        
-        <directionalLight ref={ directionalLight }
-          castShadow 
-          shadow-mapSize={ [1024, 1024] }
-          shadow-camera-top={ 3 }
-          shadow-camera-right={ 3 }
-          shadow-camera-bottom={ -3 }
-          shadow-camera-left={ -3 }
-          shadow-camera-near={ 0.1 }
-          shadow-camera-far={ 10 }
-          position={ sunPosition } 
-          intensity={ 1.5 } />
-        <ambientLight intensity={ 0.5 } />
-        <Sky sunPosition={ sunPosition } />
+    
 
         <mesh castShadow position={[ position.x, position.y, 0 ]} scale={ choice }  visible={ visible }>
             <sphereGeometry />
-            <meshStandardMaterial color={ color } />
+            <meshStandardMaterial color={ color } envMapIntensity={ envMapIntensity }/>
         </mesh>
 
         <mesh ref={ cube } castShadow position-x={ 2 } scale={ scale }>
             <boxGeometry />
-            <meshStandardMaterial color="mediumpurple" />
+            <meshStandardMaterial color="mediumpurple"  envMapIntensity={ envMapIntensity }/>
         </mesh>
 
         <mesh position-y={ -1 } rotation-x={ -Math.PI * 0.5 } scale={ 10 }>
             <planeGeometry />
-            <meshStandardMaterial color="greenyellow" />
+            <meshStandardMaterial color="greenyellow"  envMapIntensity={ envMapIntensity }/>
         </mesh>
 
     </>
