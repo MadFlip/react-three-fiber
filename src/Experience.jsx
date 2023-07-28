@@ -1,4 +1,4 @@
-import { ContactShadows, OrbitControls, useHelper } from '@react-three/drei'
+import { ContactShadows, OrbitControls, Sky, useHelper } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
 import { useControls, button } from 'leva'
 import { Perf } from 'r3f-perf'
@@ -60,6 +60,12 @@ export default function Experience()
       },
     })
 
+    const { sunPosition } = useControls('Sky', {
+      sunPosition: {
+        value: [ 1, 2, 3]
+      },
+    })
+
     const directionalLight = useRef()
     const cube = useRef()
     useHelper(directionalLight, THREE.DirectionalLightHelper, 1)
@@ -102,9 +108,10 @@ export default function Experience()
           shadow-camera-left={ -3 }
           shadow-camera-near={ 0.1 }
           shadow-camera-far={ 10 }
-          position={[ 1, 2, 3 ]} 
+          position={ sunPosition } 
           intensity={ 1.5 } />
         <ambientLight intensity={ 0.5 } />
+        <Sky sunPosition={ sunPosition } />
 
         <mesh castShadow position={[ position.x, position.y, 0 ]} scale={ choice }  visible={ visible }>
             <sphereGeometry />
