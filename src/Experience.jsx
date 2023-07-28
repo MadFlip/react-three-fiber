@@ -1,4 +1,5 @@
-import { SoftShadows, BakeShadows, OrbitControls, useHelper } from '@react-three/drei'
+import { AccumulativeShadows, OrbitControls, RandomizedLight, useHelper } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
 import { useControls, button } from 'leva'
 import { Perf } from 'r3f-perf'
 import { useRef } from 'react'
@@ -37,23 +38,47 @@ export default function Experience()
       }
     })
 
-    const directionalLight = useRef()
-    useHelper(directionalLight, THREE.DirectionalLightHelper, 1)
+    const cube = useRef()
+    // useHelper(directionalLight, THREE.DirectionalLightHelper, 1)
+    useFrame((state, delta) => {
+      const time = state.clock.elapsedTime
+      cube.current.rotation.y += delta * 0.2
+      // cube.current.position.x = Math.sin(time) + 2
+    })
 
     return <>
-        <BakeShadows />
+        {/* <BakeShadows />
         <SoftShadows frustum={ 3.75 }
           size={ 50 }
           near={ 9.5 }
           samples={ 17 }
           rings={ 11 }
-        />
+        /> */}
+        
         <color args={[ 'ivory' ]} attach="background" />
 
         { perfVisible && <Perf openByDefault trackGPU={ true } position="bottom-right" /> }
         <OrbitControls makeDefault />
-
-        <directionalLight ref={ directionalLight } 
+        
+        <AccumulativeShadows 
+          position={[ 0, -0.99, 0 ]}
+          scale={ 10 } 
+          color="#316d39"
+          opacity={ 0.8 } 
+          frames={ Infinity }
+          temporal
+          blend={ 100 }
+            >
+            <RandomizedLight
+              amount={ 8 }
+              radius={ 1 }
+              ambient={ 0.5 }
+              intensity={ 1 }
+              position={[ 1, 2, 3 ]}
+              bias={ 0.001 }
+            />
+        </AccumulativeShadows>
+        <directionalLight
           castShadow 
           shadow-mapSize={ [1024, 1024] }
           shadow-camera-top={ 3 }
@@ -71,12 +96,12 @@ export default function Experience()
             <meshStandardMaterial color={ color } />
         </mesh>
 
-        <mesh castShadow position-x={ 2 } scale={ scale }>
+        <mesh ref={ cube }  castShadow position-x={ 2 } scale={ scale }>
             <boxGeometry />
             <meshStandardMaterial color="mediumpurple" />
         </mesh>
 
-        <mesh position-y={ -1 } receiveShadow rotation-x={ -Math.PI * 0.5 } scale={ 10 }>
+        <mesh position-y={ -1 } rotation-x={ -Math.PI * 0.5 } scale={ 10 }>
             <planeGeometry />
             <meshStandardMaterial color="greenyellow" />
         </mesh>
