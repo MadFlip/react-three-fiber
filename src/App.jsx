@@ -7,7 +7,9 @@ import Scene from './Scene'
 
 export default function App() {
   // This spring controls the background and the svg fill (text color)
-  const [{ background }, set] = useSpring({ background: '#f3f6fe' }, [])
+  const [{ background }, set] = useSpring({ background:
+    'radial-gradient(#ffffff, #cdd8f5)'
+  }, [])
   return (
     <animated.main style={{ background }}>
       <Canvas className="canvas" dpr={[1, 2]}>

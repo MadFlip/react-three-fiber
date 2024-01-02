@@ -6,7 +6,6 @@ import { useSpring } from '@react-spring/core'
 import { animated } from '@react-spring/three'
 import Dots from './Dots'
 import WireframeMesh from './Wireframe'
-import ChristmasThree from './ChristmasTree'
 import { useControls, folder } from 'leva'
 
 // React-spring animates native elements, in this case <mesh/> etc,
@@ -35,10 +34,10 @@ export default function Scene({ setBg }) {
         step: 0.1,
       },
       colorDefault: '#ffffff',
-      colorOnHover: '#36d0b4',
+      colorOnHover: '#00ad8e',
       colorOnDark: '#1954ed',
       distortDefault: {
-        value: 0.3,
+        value: 0.35,
         min: 0,
         max: 1,
         step: 0.01,
@@ -62,13 +61,13 @@ export default function Scene({ setBg }) {
         step: 0.01,
       },
       clearcoat: {
-        value: 0,
+        value: 0.2,
         min: 0,
         max: 1,
         step: 0.01,
       },
       clearcoatRoughness: {
-        value: 0,
+        value: 0.4,
         min: 0,
         max: 1,
         step: 0.01,
@@ -90,8 +89,10 @@ export default function Scene({ setBg }) {
 
   const bgControls = useControls({
     'Background': folder({
-      light: '#f3f6fe',
-      dark: '#0a2caf',
+      lightOuter: '#cdd8f5',
+      lightInner: '#ffffff',
+      darkOuter: '#071b6c',
+      darkInner: '#2144d1',
     }),
   })
 
@@ -117,8 +118,7 @@ export default function Scene({ setBg }) {
     'Other Elements': folder({
       cursorColor: '#36d0b4',
       enableWireframe: false,
-      enableDotsRipple: false,
-      christmasMode: false,
+      enableDotsRipple: true,
     })
   })
 
@@ -146,16 +146,26 @@ export default function Scene({ setBg }) {
 
   // Springs for color and overall looks, this is state-driven animation
   // React-spring is physics based and turns static props into animated values
-  const [{ wobble, coat, color, wireframeScale }] = useSpring(
+  const [{ wobble, coat, color, wireframeScale, dotsRotation, dotsScale, dotsAmplitude }] = useSpring(
     {
       wobble: down ? bubbleControls.scaleOnHover + 0.2 : hovered ? bubbleControls.scaleOnHover : bubbleControls.scaleDefault,
       coat: mode && !hovered ? bubbleControls.clearcoat : 0,
       color: hovered ? bubbleControls.colorOnHover : mode ? bubbleControls.colorOnDark : bubbleControls.colorDefault,
       wireframeScale: hovered ? bubbleControls.scaleOnHover + 0.2 : bubbleControls.scaleDefault + 0.2,
+      dotsRotation: hovered ? Math.PI * -0.1 : Math.PI * -0.2,
+      dotsScale: hovered ? 0.65 : 0.5,
+      dotsAmplitude: hovered ? 0.5 : 0.2,
       config: (n) => n === 'wobble' && hovered && { mass: 2, tension: 1000, friction: 10 }
     },
     [mode, hovered, down]
   )
+
+  useEffect(() => {
+    setBg({ background: !mode ?
+      `radial-gradient(${bgControls.lightInner}, ${bgControls.lightOuter})` :
+      `radial-gradient(${bgControls.darkInner}, ${bgControls.darkOuter})`
+    })
+  }, [mode, bgControls])
 
   return (
     <>
@@ -168,13 +178,19 @@ export default function Scene({ setBg }) {
           ref={sphere}
           scale={wobble}
           onPointerOver={() => setHovered(true)}
-          onPointerOut={() => setHovered(false)}
+          onPointerOut={() => {
+            setHovered(false)
+            setDown(false)
+          }}
           onPointerDown={() => setDown(true)}
           onPointerUp={() => {
             setDown(false)
             // Toggle mode between dark and bright
             setMode(!mode)
-            setBg({ background: !mode ? bgControls.dark : bgControls.light })
+            setBg({ background: !mode ? 
+              `radial-gradient(${bgControls.darkInner}, ${bgControls.darkOuter})` :
+              `radial-gradient(${bgControls.lightInner}, ${bgControls.lightOuter})`
+            })
           }}>
           <sphereBufferGeometry args={[1, 64, 64]} />
           <AnimatedMaterial 
@@ -187,9 +203,11 @@ export default function Scene({ setBg }) {
             metalness={bubbleControls.metalness}
           />
         </animated.mesh>}
-        {otherControls.enableDotsRipple && <Dots color={hovered ? '#36d0b4' : mode ? '#1954ed' : '#f3f6fe'} />}
+        {otherControls.enableDotsRipple && <Dots color={mode ? '#1954ed' : '#cdd8f5'} radius={9.5} dotsCount={200} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
+        {otherControls.enableDotsRipple && <Dots color={mode ? '#1954ed' : '#cdd8f5'} radius={7.5} dotsCount={190} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
+        {otherControls.enableDotsRipple && <Dots color={mode ? '#1954ed' : '#cdd8f5'} radius={5.5} dotsCount={180} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
+        {otherControls.enableDotsRipple && <Dots color={mode ? '#1954ed' : '#cdd8f5'} radius={3.5} dotsCount={100} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
         {otherControls.enableWireframe && <WireframeMesh color={color} scale={wireframeScale} />}
-        {otherControls.christmasMode && <ChristmasThree />}
         <Environment files={ 'hdri/my-dawn.hdr' } />
         <ContactShadows
           rotation={[Math.PI / 2, 0, 0]}
