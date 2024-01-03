@@ -188,6 +188,7 @@ export default function Scene({ setBg }) {
             setHovered(false)
             setDown(false)
           }}
+          onPointerMissed={() => setHovered(false)}
           onPointerDown={() => {
             setDown(true)
             setHovered(true)
