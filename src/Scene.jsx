@@ -33,7 +33,7 @@ export default function Scene({ setBg }) {
         max: 2,
         step: 0.1,
       },
-      colorDefault: '#ffffff',
+      colorDefault: '#e8e8e8',
       colorOnHover: '#00ad8e',
       colorOnDark: '#1954ed',
       distortDefault: {
@@ -120,6 +120,8 @@ export default function Scene({ setBg }) {
       enableWireframe: false,
       enableDotsRipple: true,
       logoColor: '#ffffff',
+      dotsColorDefault: '#a4aabe',
+      dotsColorOnDark: '#1954ed',
     })
   })
 
@@ -213,10 +215,10 @@ export default function Scene({ setBg }) {
             metalness={bubbleControls.metalness}
           />
         </animated.mesh>
-        {otherControls.enableDotsRipple && <Dots color={mode ? '#1954ed' : '#cdd8f5'} radius={9.5} dotsCount={200} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
-        {otherControls.enableDotsRipple && <Dots color={mode ? '#1954ed' : '#cdd8f5'} radius={7.5} dotsCount={190} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
-        {otherControls.enableDotsRipple && <Dots color={mode ? '#1954ed' : '#cdd8f5'} radius={5.5} dotsCount={180} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
-        {otherControls.enableDotsRipple && <Dots color={mode ? '#1954ed' : '#cdd8f5'} radius={3.5} dotsCount={100} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
+        {otherControls.enableDotsRipple && <Dots color={mode ? otherControls.dotsColorOnDark : otherControls.dotsColorDefault} radius={9.5} dotsCount={200} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
+        {otherControls.enableDotsRipple && <Dots color={mode ? otherControls.dotsColorOnDark : otherControls.dotsColorDefault} radius={7.5} dotsCount={190} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
+        {otherControls.enableDotsRipple && <Dots color={mode ? otherControls.dotsColorOnDark : otherControls.dotsColorDefault} radius={5.5} dotsCount={180} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
+        {otherControls.enableDotsRipple && <Dots color={mode ? otherControls.dotsColorOnDark : otherControls.dotsColorDefault} radius={3.5} dotsCount={100} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
         {otherControls.enableWireframe && <WireframeMesh color={color} scale={wireframeScale} />}
         <Environment files={ 'hdri/my-dawn.hdr' } />
         <ContactShadows
