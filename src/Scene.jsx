@@ -125,6 +125,29 @@ export default function Scene({ setBg }) {
     })
   })
 
+  const springControls = useControls({
+    'Spring Effect': folder({
+      mass: {
+        value: 2,
+        min: 0,
+        max: 10,
+        step: 0.01,
+      },
+      tension: {
+        value: 1000,
+        min: 0,
+        max: 5000,
+        step: 0.1,
+      },
+      friction: {
+        value: 10,
+        min: 0,
+        max: 100,
+        step: 0.1,
+      },
+    })
+  })
+
   // Change cursor on hovered state
   useEffect(() => {
     document.body.style.cursor = hovered
@@ -163,7 +186,7 @@ export default function Scene({ setBg }) {
       dotsRotation: hovered ? Math.PI * -0.1 : Math.PI * -0.2,
       dotsScale: hovered ? 0.65 : 0.5,
       dotsAmplitude: hovered ? 0.5 : 0.2,
-      config: (n) => n === 'wobble' && hovered && { mass: 2, tension: 1000, friction: 10 }
+      config: (n) => n === 'wobble' && hovered && { mass: springControls.mass, tension: springControls.tension, friction: springControls.friction }
     },
     [mode, hovered, down]
   )
