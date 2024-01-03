@@ -9,7 +9,7 @@ import WireframeMesh from './Wireframe'
 import { useControls, folder } from 'leva'
 
 // React-spring animates native elements, in this case <mesh/> etc,
-// but it can also handle 3rd–party objs, just wrap them in "a".
+// but it can also handle 3rd–party objs, just wrap them in "animated".
 const AnimatedMaterial = animated(MeshDistortMaterial)
 
 export default function Scene({ setBg }) {
@@ -119,6 +119,7 @@ export default function Scene({ setBg }) {
       cursorColor: '#36d0b4',
       enableWireframe: false,
       enableDotsRipple: true,
+      logoColor: '#ffffff',
     })
   })
 
@@ -130,6 +131,11 @@ export default function Scene({ setBg }) {
           '<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="10" fill="' + otherControls.cursorColor + '"/></svg>'
         )}'), auto`
   }, [hovered])
+
+  // change logo color on useControls change
+  useEffect(() => {
+    document.querySelector('.logo').style.color = otherControls.logoColor
+  }, [otherControls.logoColor])
 
   // Make the bubble float and follow the mouse
   // This is frame-based animation, useFrame subscribes the component to the render-loop
@@ -174,7 +180,7 @@ export default function Scene({ setBg }) {
         <animated.pointLight ref={light} position-z={-15} intensity={hovered ? 0 : lightControls.pointLightIntensity} color={lightControls.pointLightColor}/>
       </PerspectiveCamera>
       <Suspense fallback={null}>
-        {!otherControls.christmasMode && <animated.mesh
+        <animated.mesh
           ref={sphere}
           scale={wobble}
           onPointerOver={() => setHovered(true)}
@@ -182,10 +188,13 @@ export default function Scene({ setBg }) {
             setHovered(false)
             setDown(false)
           }}
-          onPointerDown={() => setDown(true)}
+          onPointerDown={() => {
+            setDown(true)
+            setHovered(true)
+          }}
           onPointerUp={() => {
             setDown(false)
-            // Toggle mode between dark and bright
+            // Toggle mode between dark and light
             setMode(!mode)
             setBg({ background: !mode ? 
               `radial-gradient(${bgControls.darkInner}, ${bgControls.darkOuter})` :
@@ -202,7 +211,7 @@ export default function Scene({ setBg }) {
             clearcoatRoughness={bubbleControls.clearcoatRoughness}
             metalness={bubbleControls.metalness}
           />
-        </animated.mesh>}
+        </animated.mesh>
         {otherControls.enableDotsRipple && <Dots color={mode ? '#1954ed' : '#cdd8f5'} radius={9.5} dotsCount={200} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
         {otherControls.enableDotsRipple && <Dots color={mode ? '#1954ed' : '#cdd8f5'} radius={7.5} dotsCount={190} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
         {otherControls.enableDotsRipple && <Dots color={mode ? '#1954ed' : '#cdd8f5'} radius={5.5} dotsCount={180} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}

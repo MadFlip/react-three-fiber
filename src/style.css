@@ -17,6 +17,14 @@ body {
     auto;
 }
 
+.logo {
+  position: absolute;
+  left: 30px;
+  top: 30px;
+  z-index: 2;
+  color: #fff;
+}
+
 #leva__root > * {
   --leva-sizes-rootWidth: 350px;
 }
