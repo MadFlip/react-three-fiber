@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import React, { Suspense, useEffect, useState, useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { PerspectiveCamera, Environment, MeshDistortMaterial, ContactShadows } from '@react-three/drei'
+import { PerspectiveCamera, Environment, MeshDistortMaterial } from '@react-three/drei'
 import { useSpring } from '@react-spring/core'
 import { animated } from '@react-spring/three'
 import Dots from './Dots'
@@ -18,6 +18,22 @@ export default function Scene({ setBg }) {
   const [mode, setMode] = useState(false)
   const [down, setDown] = useState(false)
   const [hovered, setHovered] = useState(false)
+
+  const dotsRadiusBase = 9.5
+  const dotsCountBase = 220
+
+  const calculateDots = (radius) => {
+    return Math.round((radius / dotsRadiusBase) * dotsCountBase)
+  }
+
+  const dotsRadiusMedium = dotsRadiusBase / 1.25
+  const dotsCountMedium = calculateDots(dotsRadiusMedium)
+
+  const dotsRadiusSmall = dotsRadiusBase / 1.73
+  const dotsCountSmall = calculateDots(dotsRadiusSmall)
+
+  const dotsRadiusSmallest = dotsRadiusBase / 2.71
+  const dotsCountSmallest = calculateDots(dotsRadiusSmallest)
   
   const bubbleControls = useControls({
     'Bubble': folder({
@@ -134,13 +150,13 @@ export default function Scene({ setBg }) {
         step: 0.01,
       },
       tension: {
-        value: 1000,
+        value: 765,
         min: 0,
         max: 5000,
-        step: 0.1,
+        step: 1,
       },
       friction: {
-        value: 10,
+        value: 17.5,
         min: 0,
         max: 100,
         step: 0.1,
@@ -172,6 +188,12 @@ export default function Scene({ setBg }) {
       // Rotate the bubble
       // sphere.current.rotation.x = THREE.MathUtils.lerp(hovered ? state.mouse.x * 5 : sphere.current.rotation.x, THREE.MathUtils.degToRad(hovered ? 90 : 0), 0.05)
       // sphere.current.rotation.y = THREE.MathUtils.lerp(hovered ? state.mouse.y * 5 : sphere.current.rotation.y, THREE.MathUtils.degToRad(hovered ? 90 : 0), 0.05)
+
+      // move slightly to mouse position ONLY when hovered
+      // if (hovered) {
+      //   sphere.current.position.x = THREE.MathUtils.lerp(sphere.current.position.x, state.mouse.x / 2, 0.5)
+      //   sphere.current.position.y = THREE.MathUtils.lerp(sphere.current.position.y, state.mouse.y / 2, 0.5)
+      // }
     // }
   })
 
@@ -179,7 +201,7 @@ export default function Scene({ setBg }) {
   // React-spring is physics based and turns static props into animated values
   const [{ wobble, coat, color, wireframeScale, dotsRotation, dotsScale, dotsAmplitude }] = useSpring(
     {
-      wobble: down ? bubbleControls.scaleOnHover + 0.2 : hovered ? bubbleControls.scaleOnHover : bubbleControls.scaleDefault,
+      wobble: down ? bubbleControls.scaleOnHover + 0.1 : hovered ? bubbleControls.scaleOnHover : bubbleControls.scaleDefault,
       coat: mode && !hovered ? bubbleControls.clearcoat : 0,
       color: hovered ? bubbleControls.colorOnHover : mode ? bubbleControls.colorOnDark : bubbleControls.colorDefault,
       wireframeScale: hovered ? bubbleControls.scaleOnHover + 0.2 : bubbleControls.scaleDefault + 0.2,
@@ -192,7 +214,7 @@ export default function Scene({ setBg }) {
   )
 
   useEffect(() => {
-    setBg({ background: !mode ?
+    setBg.start({ background: !mode ?
       `radial-gradient(${bgControls.lightInner}, ${bgControls.lightOuter})` :
       `radial-gradient(${bgControls.darkInner}, ${bgControls.darkOuter})`
     })
@@ -222,12 +244,12 @@ export default function Scene({ setBg }) {
             setDown(false)
             // Toggle mode between dark and light
             setMode(!mode)
-            setBg({ background: !mode ? 
+            setBg.start({ background: !mode ? 
               `radial-gradient(${bgControls.darkInner}, ${bgControls.darkOuter})` :
               `radial-gradient(${bgControls.lightInner}, ${bgControls.lightOuter})`
             })
           }}>
-          <sphereBufferGeometry args={[1, 64, 64]} />
+          <sphereGeometry args={[1, 64, 64]} />
           <AnimatedMaterial 
             distort={hovered ? bubbleControls.distortOnHover : bubbleControls.distortDefault}
             speed={hovered ? bubbleControls.speedOnHover : bubbleControls.speedDefault}
@@ -238,21 +260,12 @@ export default function Scene({ setBg }) {
             metalness={bubbleControls.metalness}
           />
         </animated.mesh>
-        {otherControls.enableDotsRipple && <Dots color={mode ? otherControls.dotsColorOnDark : otherControls.dotsColorDefault} radius={9.5} dotsCount={200} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
-        {otherControls.enableDotsRipple && <Dots color={mode ? otherControls.dotsColorOnDark : otherControls.dotsColorDefault} radius={7.5} dotsCount={190} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
-        {otherControls.enableDotsRipple && <Dots color={mode ? otherControls.dotsColorOnDark : otherControls.dotsColorDefault} radius={5.5} dotsCount={180} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
-        {otherControls.enableDotsRipple && <Dots color={mode ? otherControls.dotsColorOnDark : otherControls.dotsColorDefault} radius={3.5} dotsCount={100} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
+        {otherControls.enableDotsRipple && <Dots color={mode ? otherControls.dotsColorOnDark : otherControls.dotsColorDefault} radius={dotsRadiusBase} dotsCount={dotsCountBase} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
+        {otherControls.enableDotsRipple && <Dots color={mode ? otherControls.dotsColorOnDark : otherControls.dotsColorDefault} radius={dotsRadiusMedium} dotsCount={dotsCountMedium} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
+        {otherControls.enableDotsRipple && <Dots color={mode ? otherControls.dotsColorOnDark : otherControls.dotsColorDefault} radius={dotsRadiusSmall} dotsCount={dotsCountSmall} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
+        {otherControls.enableDotsRipple && <Dots color={mode ? otherControls.dotsColorOnDark : otherControls.dotsColorDefault} radius={dotsRadiusSmallest} dotsCount={dotsCountSmallest} dotsRotation={dotsRotation} dotsScale={dotsScale} dotsAmplitude={dotsAmplitude} hovered={hovered} />}
         {otherControls.enableWireframe && <WireframeMesh color={color} scale={wireframeScale} />}
         <Environment files={ 'hdri/my-dawn.hdr' } />
-        <ContactShadows
-          rotation={[Math.PI / 2, 0, 0]}
-          position={[0, -1.6, 0]}
-          opacity={mode ? 0.8 : 0.4}
-          width={15}
-          height={15}
-          blur={2.5}
-          far={1.6}
-        />
       </Suspense>
     </>
   )

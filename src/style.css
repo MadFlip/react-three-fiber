@@ -25,6 +25,6 @@ body {
   color: #fff;
 }
 
-#leva__root > * {
+#root > * {
   --leva-sizes-rootWidth: 350px;
 }
