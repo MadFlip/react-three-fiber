@@ -166,11 +166,13 @@ export default function Scene({ setBg }) {
 
   // Change cursor on hovered state
   useEffect(() => {
-    document.body.style.cursor = hovered
-      ? 'none'
-      : `url('data:image/svg+xml;base64,${btoa(
-          '<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="10" fill="' + otherControls.cursorColor + '"/></svg>'
-        )}'), auto`
+    document.body.style = hovered
+      ? 'cursor: none;'
+      : window.devicePixelRatio === 1
+        ? `cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" stroke="%2336d0b4" fill="%2336d0b4" width="20px" height="20px" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4.5"/></svg>') 10 10, auto;`
+        : window.navigator.userAgent.indexOf('Firefox') === -1
+          ? `cursor: image-set(url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" stroke="%2336d0b4" fill="%2336d0b4" width="40px" height="40px" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9"/></svg>') 2x) 10 10, auto;`
+          : `cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" stroke="%2336d0b4" fill="%2336d0b4" width="20px" height="20px" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4.5"/></svg>') 10 10, auto;`
   }, [hovered])
 
   // change logo color on useControls change
@@ -181,8 +183,13 @@ export default function Scene({ setBg }) {
   // Make the bubble float and follow the mouse
   // This is frame-based animation, useFrame subscribes the component to the render-loop
   useFrame((state) => {
-    light.current.position.x = state.mouse.x * 50
-    light.current.position.y = state.mouse.y * 50
+    // only if mouse is pointer and not finger
+
+
+    if (window.matchMedia("(pointer: fine)").matches) {
+      light.current.position.x = state.mouse.x * 50
+      light.current.position.y = state.mouse.y * 50
+    }
 
     // if (sphere.current) {
       // Rotate the bubble

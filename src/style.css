@@ -13,8 +13,19 @@ main {
 }
 
 body {
-  cursor: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxNiIgY3k9IjE2IiByPSIxMCIgZmlsbD0iI0U4QjA1OSIvPjwvc3ZnPg=='),
-    auto;
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" stroke="%2336d0b4" fill="%2336d0b4" width="20px" height="20px" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4.5"/></svg>') 10 10, auto; 
+}
+
+@media (-webkit-min-device-pixel-ratio: 2) {
+  body {
+    cursor: image-set(url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" stroke="%2336d0b4" fill="%2336d0b4" width="40px" height="40px" viewBox="0 0 20 20"><circle cx="10" cy="10" r="9"/></svg>') 2x) 10 10, auto;
+  }
+
+  @supports (-moz-appearance: none) {
+    body {
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" stroke="%2336d0b4" fill="%2336d0b4" width="20px" height="20px" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4.5"/></svg>') 10 10, auto;
+    }
+  }
 }
 
 .logo {
@@ -26,5 +37,9 @@ body {
 }
 
 #root > * {
-  --leva-sizes-rootWidth: 350px;
+  --leva-sizes-rootWidth: calc(100% - 100px);
+
+  @media (min-width: 768px) {
+    --leva-sizes-rootWidth: 350px;
+  }
 }
