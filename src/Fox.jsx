@@ -1,24 +1,28 @@
 import { useGLTF, useAnimations, Html } from '@react-three/drei'
 import { useEffect, useState } from 'react'
+import { useControls } from 'leva'
 
 export default function Fox(props) {
     const fox = useGLTF('./Fox/glTF-Binary/Fox.glb')
-    const { animations, scene } = fox
-    const { actions } = useAnimations(animations, scene)
+    const animations = useAnimations(fox.animations, fox.scene)
+    
+    const { animationName } = useControls({
+        animationName: {
+            options: animations.names,
+        }
+    })
 
     useEffect(() => {
-        actions.Walk.play()
-        setTimeout(() => {
-            actions.Run.play()
-            actions.Run.crossFadeFrom(actions.Walk, 1)
-        }, 2000)
-    }, [])
+        const action = animations.actions[animationName]
+        action
+            .reset()
+            .fadeIn(0.5)
+            .play()
 
-    return (
-        <>
-            <primitive object={ scene } { ...props } />
-        </>
-    )
+        return () => action.fadeOut(0.5)
+    }, [ animationName ])
+
+    return <primitive object={ fox.scene } { ...props } />
 }
 
 useGLTF.preload('./Fox/glTF-Binary/Fox.glb')
