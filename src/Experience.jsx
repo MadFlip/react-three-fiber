@@ -9,7 +9,8 @@ const material = new THREE.MeshMatcapMaterial()
 
 export default function Experience()
 {
-  const donutsGroup = useRef()
+  // const donutsGroup = useRef()
+  const donuts = useRef([])
 
   const [ matcapTexture ] = useMatcapTexture('7877EE_D87FC5_75D9C7_1C78C0', 256)
 
@@ -22,7 +23,7 @@ export default function Experience()
   }, [])
 
   useFrame((state, delta) => {
-    for(const donut of donutsGroup.current.children)
+    for(const donut of donuts.current)
     {
       donut.rotation.y += delta * 0.5
       donut.rotation.x += delta * 0.2
@@ -48,9 +49,11 @@ export default function Experience()
         Hello R3F
       </Text3D>
     </Center>
-    <group ref={ donutsGroup }>
+
       {[...Array(100)].map((value, index) =>
-        <mesh key={index}
+        <mesh 
+          ref={ el => donuts.current[index] = el }
+          key={index}
           geometry={ torusGeometry }
           material={ material }
           position={[
@@ -66,6 +69,5 @@ export default function Experience()
           ]}
         />
       )}
-    </group>
   </>
 }
