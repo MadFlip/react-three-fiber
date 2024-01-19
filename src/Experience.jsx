@@ -1,11 +1,13 @@
 import { useFrame } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
+import { OrbitControls, useGLTF } from '@react-three/drei'
 import { useRef, useState, useEffect } from 'react'
 import { useSpring, animated } from '@react-spring/three'
 
 export default function Experience()
 {
     const cube = useRef()
+    const hamburger = useGLTF('./hamburger.glb')
+
     const defaultColor = 'mediumpurple'
     const [clicked, setClicked] = useState(false)
     const [getScale, setScale] = useSpring(() => ({ scale: 1 }), [])
@@ -61,5 +63,16 @@ export default function Experience()
             <meshStandardMaterial color="greenyellow" />
         </mesh>
 
+        <primitive 
+          object={ hamburger.scene }
+          position-y={ 1 }
+          scale={ 0.25 } 
+          onClick={(e) => {
+            // console.log(e.object) // Mesh inside Group
+            // console.log(e.eventObject) // Group
+            console.log('hamburger clicked')
+            e.stopPropagation()
+          }}
+          />
     </>
 }
