@@ -35,7 +35,13 @@ export default function Experience()
         <directionalLight position={ [ 1, 2, 3 ] } intensity={ 4.5 } />
         <ambientLight intensity={ 1.5 } />
 
-        <mesh position-x={ - 2 }>
+        <mesh position-x={ - 2 }
+            onClick={(e) => {
+              e.stopPropagation()
+              setClicked(false)}
+            }
+            onPointerEnter={(e) => e.stopPropagation()}
+            >
             <sphereGeometry />
             <meshStandardMaterial color="orange" />
         </mesh>
@@ -43,6 +49,8 @@ export default function Experience()
         <animated.mesh ref={ cube } position-x={ 2 } scale={ getScale.scale }
           onClick={() => {setClicked(!clicked)} }
           onPointerMissed={() => setClicked(false)}
+          onPointerEnter={() => document.body.style.cursor = 'pointer'}
+          onPointerLeave={() => document.body.style.cursor = ''}
           >
             <boxGeometry />
             <animated.meshStandardMaterial color={ getColor.color } />
