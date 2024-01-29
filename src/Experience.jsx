@@ -23,7 +23,10 @@ export default function Experience()
           premultiply
           blendFunction={ BlendFunction.SCREEN }
         /> */}
-        <Bloom mipmapBlur luminanceThreshold={ 1.1 } />
+        <Bloom 
+          intensity={ 0.1 }
+          mipmapBlur 
+          luminanceThreshold={ 0 } />
       <ToneMapping />
     </EffectComposer>
 
@@ -36,17 +39,17 @@ export default function Experience()
 
     <mesh castShadow position-x={ - 2 }>
       <sphereGeometry />
-      <meshStandardMaterial color={ [1.5, 1, 4] } />
+      <meshBasicMaterial color={ [0, 1.25 * 5, 1.12 * 5] } />
     </mesh>
 
     <mesh castShadow position-x={ 2 } scale={ 1.5 }>
       <boxGeometry />
-      <meshStandardMaterial color="salmon"emissive="salmon" emissiveIntensity={ 2 } />
+      <meshBasicMaterial color={ [1.5, 1, 4] } />
     </mesh>
 
-    <mesh receiveShadow position-y={ - 1 } rotation-x={ - Math.PI * 0.5 } scale={ 10 }>
+    {/* <mesh receiveShadow position-y={ - 1 } rotation-x={ - Math.PI * 0.5 } scale={ 10 }>
       <planeGeometry />
       <meshStandardMaterial color="greenyellow" />
-    </mesh>
+    </mesh> */}
   </>
 }
