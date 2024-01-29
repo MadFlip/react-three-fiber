@@ -1,24 +1,29 @@
 import { OrbitControls } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
-import { Glitch, ToneMapping, Vignette, EffectComposer } from '@react-three/postprocessing'
+import { Bloom, Glitch, Noise, ToneMapping, Vignette, EffectComposer } from '@react-three/postprocessing'
 import { GlitchMode, BlendFunction } from 'postprocessing'
 
 export default function Experience()
 {
   return <>
-    <color args={ [ '#fff' ] } attach='background' />
+    <color args={ [ '#333' ] } attach='background' />
     <EffectComposer disableNormalPass>
       {/* <Vignette 
         offset={ 0.3 }
         darkness={ 0.8 }
         blendFunction={ BlendFunction.NORMAL }
         /> */}
-        <Glitch 
+        {/* <Glitch 
           delay={ [0.5, 1] }
           duration={ [0.1, 0.3] }
           strength={ [0.2, 0.4] }
           mode={ GlitchMode.CONSTANT_WILD }
-        /> 
+        /> */}
+        {/* <Noise 
+          premultiply
+          blendFunction={ BlendFunction.SCREEN }
+        /> */}
+        <Bloom mipmapBlur luminanceThreshold={ 1.1 } />
       <ToneMapping />
     </EffectComposer>
 
@@ -31,12 +36,12 @@ export default function Experience()
 
     <mesh castShadow position-x={ - 2 }>
       <sphereGeometry />
-      <meshStandardMaterial color="orange" />
+      <meshStandardMaterial color={ [1.5, 1, 4] } />
     </mesh>
 
     <mesh castShadow position-x={ 2 } scale={ 1.5 }>
       <boxGeometry />
-      <meshStandardMaterial color="mediumpurple" />
+      <meshStandardMaterial color="salmon"emissive="salmon" emissiveIntensity={ 2 } />
     </mesh>
 
     <mesh receiveShadow position-y={ - 1 } rotation-x={ - Math.PI * 0.5 } scale={ 10 }>
