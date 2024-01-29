@@ -3,6 +3,7 @@ import { Perf } from 'r3f-perf'
 import { EffectComposer, ToneMapping } from '@react-three/postprocessing'
 import Drunk from './Drunk'
 import { useRef } from 'react'
+import { BlendFunction } from 'postprocessing'
 
 export default function Experience()
 {
@@ -10,12 +11,13 @@ export default function Experience()
   return <>
     <color args={ [ '#fff' ] } attach='background' />
     <EffectComposer disableNormalPass>
+      <ToneMapping />
       <Drunk 
         ref={ drunkRef }
-        frequency={ 0.5 }
-        amplitude={ 0.5 }
+        frequency={ 500}
+        amplitude={ 0.01 }
       />
-      <ToneMapping />
+    
     </EffectComposer>
 
 
