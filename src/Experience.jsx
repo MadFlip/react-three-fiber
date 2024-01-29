@@ -1,37 +1,20 @@
 import { OrbitControls } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
-import { DepthOfField, Bloom, Glitch, Noise, ToneMapping, Vignette, EffectComposer } from '@react-three/postprocessing'
-import { GlitchMode, BlendFunction } from 'postprocessing'
+import { EffectComposer, ToneMapping } from '@react-three/postprocessing'
+import Drunk from './Drunk'
+import { useRef } from 'react'
 
 export default function Experience()
 {
+  const drunkRef = useRef()
   return <>
     <color args={ [ '#fff' ] } attach='background' />
     <EffectComposer disableNormalPass>
-      {/* <Vignette 
-        offset={ 0.3 }
-        darkness={ 0.8 }
-        blendFunction={ BlendFunction.NORMAL }
-        /> */}
-        {/* <Glitch 
-          delay={ [0.5, 1] }
-          duration={ [0.1, 0.3] }
-          strength={ [0.2, 0.4] }
-          mode={ GlitchMode.CONSTANT_WILD }
-        /> */}
-        {/* <Noise 
-          premultiply
-          blendFunction={ BlendFunction.SCREEN }
-        /> */}
-        {/* <Bloom 
-          intensity={ 0.5 }
-          mipmapBlur 
-          luminanceThreshold={ 1.1 } /> */}
-        <DepthOfField
-          focusDistance={ 0.025 }
-          focalLength={ 0.025 }
-          bokehScale={ 6 }
-          />
+      <Drunk 
+        ref={ drunkRef }
+        frequency={ 0.5 }
+        amplitude={ 0.5 }
+      />
       <ToneMapping />
     </EffectComposer>
 
