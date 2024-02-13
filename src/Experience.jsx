@@ -1,6 +1,6 @@
-import { OrbitControls } from '@react-three/drei'
+import { Capsule, OrbitControls } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
-import { RigidBody, Physics } from '@react-three/rapier'
+import { CuboidCollider, BallCollider, CapsuleCollider, RigidBody, Physics } from '@react-three/rapier'
 
 export default function Experience()
 {
@@ -14,7 +14,7 @@ export default function Experience()
         <ambientLight intensity={ 1.5 } />
         
         <Physics 
-        // debug
+        debug
         >
           <RigidBody colliders="ball">
             <mesh castShadow position={ [ 0, 3, 0.5 ] }>
@@ -26,8 +26,11 @@ export default function Experience()
           {/* colliders 'hull' wraps the mesh like a coat */}
           {/* colliders 'trimesh' wraps more precisely, including cavities and holes */}
 
-          <RigidBody colliders="trimesh">
-            <mesh castShadow position={[ 0, 1, 0 ]} rotation={[ Math.PI * 0.1, 0, 0 ]}>
+          <RigidBody colliders={ false } position={[ 0, 1, 0 ]} rotation={[ Math.PI * 0.2, 0, 0 ]}>
+            {/* <CuboidCollider args={[1.5, 1.5, 0.5]} /> */}
+            {/* <BallCollider args={[1.5]} /> */}
+            <CapsuleCollider args={[1.5, 0.5]} />
+            <mesh castShadow>
               <torusGeometry args={[ 1, 0.5, 16, 32 ]} />
               <meshStandardMaterial color="mediumpurple" />
             </mesh>
