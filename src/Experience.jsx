@@ -1,12 +1,13 @@
 import { OrbitControls } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
 import { RigidBody, Physics, CuboidCollider } from '@react-three/rapier'
-import { useRef } from 'react' 
+import { useRef, useState } from 'react' 
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
 export default function Experience()
 {
+    const [ hitSound ] = useState(() => new Audio('./hit.mp3'))
     const cube = useRef()
     const twister = useRef()
 
@@ -35,6 +36,12 @@ export default function Experience()
       twister.current.setNextKinematicTranslation({ x, y: -0.8, z })
     })
 
+    const collisionEnter = () => {
+      // hitSound.currentTime = 0
+      // hitSound.volume = Math.random()
+      // hitSound.play()
+    }
+
     return <>
 
         <Perf position="top-left" />
@@ -45,7 +52,7 @@ export default function Experience()
         <ambientLight intensity={ 1.5 } />
         
         <Physics
-          debug
+          // debug
           gravity={ [ 0, -9.81, 0 ] }
         >
           <RigidBody colliders="ball" restitution={ 0.8 }>
@@ -63,6 +70,10 @@ export default function Experience()
             restitution={ 0.8 }
             friction={ 0 }
             colliders={ false }
+            onCollisionEnter={ collisionEnter }
+            // onCollisionExit={ () => console.log('Exit') }
+            // onSleep={ () => console.log('Sleep') }
+            // onWake={ () => console.log('Wake') }
             >
             <mesh castShadow
               onClick={ cubeJump }
@@ -80,6 +91,23 @@ export default function Experience()
             >
             <mesh receiveShadow position-y={ - 1.25 }>
               <boxGeometry args={ [ 10, 0.5, 10 ] } />
+              <meshStandardMaterial color="greenyellow" />
+            </mesh>
+            {/* put 4 box as border of the plane box */}
+            <mesh receiveShadow position={ [ 0, 0, 5 ] }>
+              <boxGeometry args={ [ 10, 0.5, 1 ] } />
+              <meshStandardMaterial color="greenyellow" />
+            </mesh>
+            <mesh receiveShadow position={ [ 0, 0, -5 ] }>
+              <boxGeometry args={ [ 10, 0.5, 1 ] } />
+              <meshStandardMaterial color="greenyellow" />
+            </mesh>
+            <mesh receiveShadow position={ [ 5, 0, 0 ] }>
+              <boxGeometry args={ [ 1, 0.5, 10 ] } />
+              <meshStandardMaterial color="greenyellow" />
+            </mesh>
+            <mesh receiveShadow position={ [ -5, 0, 0 ] }>
+              <boxGeometry args={ [ 1, 0.5, 10 ] } />
               <meshStandardMaterial color="greenyellow" />
             </mesh>
           </RigidBody>
