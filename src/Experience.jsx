@@ -1,6 +1,6 @@
-import { OrbitControls } from '@react-three/drei'
+import { OrbitControls, useGLTF } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
-import { RigidBody, Physics, CuboidCollider } from '@react-three/rapier'
+import { RigidBody, Physics, CuboidCollider, CylinderCollider } from '@react-three/rapier'
 import { useRef, useState } from 'react' 
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
@@ -10,6 +10,7 @@ export default function Experience()
     const [ hitSound ] = useState(() => new Audio('./hit.mp3'))
     const cube = useRef()
     const twister = useRef()
+    const hambuger = useGLTF('./hamburger.glb')
 
     const cubeJump = () => {
       const mass = cube.current.mass()
@@ -52,7 +53,7 @@ export default function Experience()
         <ambientLight intensity={ 1.5 } />
         
         <Physics
-          // debug
+          debug
           gravity={ [ 0, -9.81, 0 ] }
         >
           <RigidBody colliders="ball" restitution={ 0.8 }>
@@ -122,6 +123,11 @@ export default function Experience()
               <boxGeometry />
               <meshStandardMaterial color="red" />
             </mesh>
+          </RigidBody>
+
+          <RigidBody colliders={ false }>
+            <primitive object={ hambuger.scene } scale={ 0.25 } />
+            <CylinderCollider mass={ 0.1 } args={[ 0.5, 1.25 ]} />
           </RigidBody>
         </Physics>
     </>
