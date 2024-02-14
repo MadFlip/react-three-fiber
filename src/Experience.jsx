@@ -1,7 +1,7 @@
 import { OrbitControls, useGLTF } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
-import { RigidBody, Physics, CuboidCollider, CylinderCollider } from '@react-three/rapier'
-import { useRef, useState } from 'react' 
+import { RigidBody, Physics, CuboidCollider, CylinderCollider, InstancedRigidBodies } from '@react-three/rapier'
+import { useRef, useState, useMemo } from 'react' 
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 
@@ -11,10 +11,10 @@ export default function Experience()
     const cube = useRef()
     const twister = useRef()
     const hambuger = useGLTF('./hamburger.glb')
+    // const cubes = useRef()
 
     const cubeJump = () => {
       const mass = cube.current.mass()
-      console.log('Cube mass:', mass)
 
       cube.current.applyImpulse({ x: 0, y: 5 * mass, z: 0 })
       cube.current.applyTorqueImpulse({ 
@@ -26,7 +26,7 @@ export default function Experience()
 
     useFrame((state) => {
       const time = state.clock.getElapsedTime()
-      const eulerRotation = new THREE.Euler(0, time * 4, 0)
+      const eulerRotation = new THREE.Euler(0, time * 10, 0)
       const quaternionRotation = new THREE.Quaternion()
       quaternionRotation.setFromEuler(eulerRotation)
       twister.current.setNextKinematicRotation(quaternionRotation)
@@ -43,6 +43,39 @@ export default function Experience()
       // hitSound.play()
     }
 
+    // useEffect(() => {
+    //   for (let i = 0; i < cubesCount; i++) {
+    //     const matrix = new THREE.Matrix4()
+    //     matrix.compose(
+    //       new THREE.Vector3(i * 2, 0, 0),
+    //       new THREE.Quaternion(),
+    //       new THREE.Vector3(1, 1, 1)
+    //     )
+    //     cubes.current.setMatrixAt(i, matrix) 
+    //   }
+    // }, [])
+
+    const cubesCount = 25
+    const cubeIntances = useMemo(() => {
+      const instances = []
+      for (let i = 0; i < cubesCount; i++) {
+        instances.push({
+          key: 'cube_' + i,
+          position: [
+            (Math.random() - 0.5) * 7,
+            10 + i * 0.5,
+            (Math.random() - 0.5) * 7 ],
+          rotation: [
+            Math.random(),
+            Math.random(),
+            Math.random(),
+          ],
+        })
+      }
+
+      return instances
+    }, [])
+
     return <>
 
         <Perf position="top-left" />
@@ -53,7 +86,7 @@ export default function Experience()
         <ambientLight intensity={ 1.5 } />
         
         <Physics
-          debug
+          debug={ false }
           gravity={ [ 0, -9.81, 0 ] }
         >
           <RigidBody colliders="ball" restitution={ 0.8 }>
@@ -94,23 +127,13 @@ export default function Experience()
               <boxGeometry args={ [ 10, 0.5, 10 ] } />
               <meshStandardMaterial color="greenyellow" />
             </mesh>
-            {/* put 4 box as border of the plane box */}
-            <mesh receiveShadow position={ [ 0, 0, 5 ] }>
-              <boxGeometry args={ [ 10, 0.5, 1 ] } />
-              <meshStandardMaterial color="greenyellow" />
-            </mesh>
-            <mesh receiveShadow position={ [ 0, 0, -5 ] }>
-              <boxGeometry args={ [ 10, 0.5, 1 ] } />
-              <meshStandardMaterial color="greenyellow" />
-            </mesh>
-            <mesh receiveShadow position={ [ 5, 0, 0 ] }>
-              <boxGeometry args={ [ 1, 0.5, 10 ] } />
-              <meshStandardMaterial color="greenyellow" />
-            </mesh>
-            <mesh receiveShadow position={ [ -5, 0, 0 ] }>
-              <boxGeometry args={ [ 1, 0.5, 10 ] } />
-              <meshStandardMaterial color="greenyellow" />
-            </mesh>
+          </RigidBody>
+
+          <RigidBody type="fixed">
+            <CuboidCollider args={[ 5, 5, 0.5 ]} position={[ 0, 3, 5.25 ]} />
+            <CuboidCollider args={[ 5, 5, 0.5 ]} position={[ 0, 3, -5.25 ]} />
+            <CuboidCollider args={[ 0.5, 5, 5 ]} position={[ 5.25, 3, 0 ]} />
+            <CuboidCollider args={[ 0.5, 5, 5 ]} position={[ -5.25, 3, 0 ]} />
           </RigidBody>
 
           <RigidBody
@@ -125,10 +148,17 @@ export default function Experience()
             </mesh>
           </RigidBody>
 
-          <RigidBody colliders={ false }>
+          {/* <RigidBody colliders={ false }>
             <primitive object={ hambuger.scene } scale={ 0.25 } />
             <CylinderCollider mass={ 0.1 } args={[ 0.5, 1.25 ]} />
-          </RigidBody>
+          </RigidBody> */}
+
+          <InstancedRigidBodies instances={ cubeIntances }>
+            <instancedMesh castShadow args={[ null, null, cubesCount ]}>
+              <boxGeometry />
+              <meshStandardMaterial color="tomato" />
+            </instancedMesh>
+          </InstancedRigidBodies>
         </Physics>
     </>
 }
