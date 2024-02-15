@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { CuboidCollider, RigidBody } from '@react-three/rapier'
 import { useMemo, useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { useGLTF } from '@react-three/drei'
+import { Float, useGLTF } from '@react-three/drei'
 
 const boxGeometry = new THREE.BoxGeometry(1, 1, 1)
 const floor1Material = new THREE.MeshStandardMaterial({ color: 'limegreen' })
@@ -97,11 +97,13 @@ export function BlockEnd ({ position = [0, 0, 0] }) {
 
   return <group position={ position }>
     {/* Floor */}
-    <mesh geometry={ boxGeometry } material={ floor1Material } position-y={ 0 }
+    <mesh geometry={ boxGeometry } material={ floor1Material } position-y={ -0.08 }
       scale={[ 4, 0.2, 4 ]} receiveShadow />
-    <RigidBody type="fixed" colliders="hull" restitution={ 0.2 } friction={ 0 } position={[0, 0.25, 0]}>
-      <primitive object={ hamburger.scene } scale={ 0.2 }/>
-    </RigidBody>
+      <RigidBody type="fixed" colliders="hull" restitution={ 0.2 } friction={ 0 } position={[0, 0.25, 0]}>
+        <Float floatIntensity={ 1 }>
+            <primitive object={ hamburger.scene } scale={ 0.2 }/>
+        </Float>
+      </RigidBody>
   </group>
 }
 

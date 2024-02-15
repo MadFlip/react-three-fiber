@@ -9,13 +9,13 @@ export default function Experience()
     return <>
 
         <OrbitControls makeDefault />
-        <Physics 
-          // debug
-          >
+        <color attach="background" args={['slategrey']} />
+        <fog attach="fog" args={['slategrey',1, 20]} />
+        <Physics debug = { 0 }>
           <Lights />
-          <Level />
+          <Level count={ 20 } />
           <Player />
         </Physics>
-        <Grid infiniteGrid={ true } position-y={ -0.01 }/>
+        {/* <Grid infiniteGrid={ true } position-y={ -0.01 }/> */}
     </>
 }
