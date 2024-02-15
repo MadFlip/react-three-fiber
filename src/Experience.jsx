@@ -1,6 +1,7 @@
 import { Grid, OrbitControls } from '@react-three/drei'
 import Lights from './Lights.jsx'
 import { Level } from './Level.jsx'
+import { Player } from './Player.jsx'
 import { Physics } from '@react-three/rapier'
 
 export default function Experience()
@@ -8,9 +9,12 @@ export default function Experience()
     return <>
 
         <OrbitControls makeDefault />
-        <Physics debug>
+        <Physics 
+          // debug
+          >
           <Lights />
           <Level />
+          <Player />
         </Physics>
         <Grid infiniteGrid={ true } position-y={ -0.01 }/>
     </>
