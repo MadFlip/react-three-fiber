@@ -1,4 +1,4 @@
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useLoader } from "@react-three/fiber";
 import { RigidBody, useRapier } from "@react-three/rapier";
 import { useKeyboardControls } from "@react-three/drei";
 import { useState, useEffect, useRef } from "react";
@@ -11,6 +11,9 @@ export function Player() {
   const { rapier, world } = useRapier()
   const [ smoothedCameraPosition ] = useState(() => new THREE.Vector3(10, 10, 10))
   const [ smoothedCameraTarget ] = useState(() => new THREE.Vector3())
+
+  const matcapTexture = useLoader(THREE.TextureLoader, './matcaps/DEE3E8_A6AEB5_BCC4CC_BCC4C4-512px.png')
+  
 
   const start = useGame((state) => state.start)
   const end = useGame((state) => state.end)
@@ -131,8 +134,10 @@ export function Player() {
     friction={ 1 } 
     position={[ 0, 1, 0]}>
     <mesh castShadow>
-      <icosahedronGeometry args={[0.3, 1]} />
-      <meshStandardMaterial flatShading color="mediumpurple"/>
+      <icosahedronGeometry args={[0.3, 4]} />
+      <meshMatcapMaterial matcap={ matcapTexture } 
+        flatShading 
+        toneMapped={ false } />
     </mesh>
   </RigidBody>
 }
