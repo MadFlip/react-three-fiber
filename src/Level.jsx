@@ -238,7 +238,7 @@ export function BlockNarrowBridgeCenter ({ position = [0, 0, 0]}) {
 
 export function BlockEnd ({ position = [0, 0, 0] }) {
   const flyntRef = useRef()
-  const matcapTexture = useLoader(TextureLoader, './matcaps/0D0DE3_040486_0404AF_0404CF-512px.png')
+  const matcapTexture = useLoader(TextureLoader, './matcaps/D07E3F_FBBD1F_8D2840_24120C-512px.png')
   const { nodes } = useGLTF('./flynt.glb')
   const flyntScale = 0.45
 

@@ -128,9 +128,12 @@ button {
   width: 40px;
   height: 40px;
   margin: 4px;
-  border: 2px solid #ffffff;
+  border: 1px solid #ffffff;
   background: #ffffff44;
   border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .controls .key.large

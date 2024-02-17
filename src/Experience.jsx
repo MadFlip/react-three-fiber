@@ -6,11 +6,14 @@ import { Physics } from '@react-three/rapier'
 import useGame from './stores/useGame.jsx'
 import { Noise, ToneMapping, EffectComposer } from '@react-three/postprocessing'
 import { BlendFunction } from 'postprocessing'
+import { TextureLoader } from 'three'
+import { useLoader } from '@react-three/fiber'
 
 export default function Experience()
 {
     const blocksCount = useGame((state) => state.blocksCount)
     const blocksSeed = useGame((state) => state.blocksSeed)
+    // const matcapTexture = useLoader(TextureLoader, './matcaps/046363_0CC3C3_049B9B_04ACAC-512px.png')
 
     return <>
         <EffectComposer disableNormalPass>  
@@ -33,5 +36,10 @@ export default function Experience()
           <Player />
         </Physics>
         {/* <Grid infiniteGrid={ true } position-y={ -2 }/> */}
+        {/* <mesh scale={50} position={[0, -65, -(blocksCount) * 4 ]}> 
+          <icosahedronGeometry args={[1, 6]} />
+          <meshMatcapMaterial matcap={matcapTexture} flatShading 
+        toneMapped={ false }/> 
+        </mesh> */}
     </>
 }
